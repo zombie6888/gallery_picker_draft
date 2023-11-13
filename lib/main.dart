@@ -48,6 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Medium> _mediums = [];
   List<AssetEntityImage> _assets = [];
 
+  int _page = 1;
+
   @override
   initState() {
     super.initState();
@@ -114,6 +116,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // });
   }
 
+  loadMoreImages() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print('загрузка изображений');
+      setState(() {
+        _page = _page + 1;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -132,7 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: GalleryView(images: _assets)
+        body: GalleryView(
+            onLoadMoreImages: loadMoreImages,
+            images: _assets,
+            page: _page,
+            size: 50,
+            itemsCount: 100)
         // _assets.isEmpty
         //     ? const Center(child: CircularProgressIndicator())
         //     : ListView(

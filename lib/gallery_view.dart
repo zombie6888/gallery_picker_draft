@@ -5,9 +5,11 @@ class GalleryView extends StatefulWidget {
   final int page;
   final int itemsCount;
   final int size;
+  final VoidCallback onLoadMoreImages;
   const GalleryView(
       {super.key,
       required this.images,
+      required this.onLoadMoreImages,
       required this.page,
       required this.size,
       required this.itemsCount});
@@ -31,42 +33,51 @@ class _GalleryViewState extends State<GalleryView> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-        mainAxisSpacing: 1,
-        crossAxisSpacing: 1,
-        crossAxisCount: 3,
-        children: [
-          for (var i = 0; i < widget.itemsCount; i++)
-            Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.red,
-                    child: widget.images.length > i
-                        ? AnimatedPadding(
-                            padding: _selectedIndexes.contains(i)
-                                ? const EdgeInsets.all(12)
-                                : EdgeInsets.zero,
-                            duration: const Duration(milliseconds: 100),
-                            child: Image(
-                              image: widget.images[i].image,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : null),
-                Positioned(
-                    top: 0,
-                    right: 0,
-                    child: ThumbSelector(
-                      index: i,
-                      isActive: _selectedIndexes.contains(i),
-                      onToggleSelector: onToggleSelector,
-                    ))
-              ],
-            )
-        ]);
+    final itemCount = widget.page * widget.size;
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1,
+          crossAxisCount: 3,
+        ),
+        itemCount: itemCount,
+        itemBuilder: (context, i) {
+          final lastItemVisible = i == itemCount - 1;
+          if (lastItemVisible) {
+            widget.onLoadMoreImages();
+          }
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.red,
+                  child: widget.images.length > i
+                      ? AnimatedPadding(
+                          padding: _selectedIndexes.contains(i)
+                              ? const EdgeInsets.all(12)
+                              : EdgeInsets.zero,
+                          duration: const Duration(milliseconds: 100),
+                          child: Image(
+                            image: widget.images[i].image,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : lastItemVisible
+                          ? const Center(child: CircularProgressIndicator())
+                          : null),
+              Positioned(
+                  top: 0,
+                  right: 0,
+                  child: ThumbSelector(
+                    index: i,
+                    isActive: _selectedIndexes.contains(i),
+                    onToggleSelector: onToggleSelector,
+                  ))
+            ],
+          );
+        });
   }
 }
 
