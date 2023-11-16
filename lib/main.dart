@@ -38,10 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // appBar: AppBar(
-        //     backgroundColor: Theme.of(context).colorScheme.inversePrimary),
-        body: Builder(builder: (context) {
+    return Scaffold(body: Builder(builder: (context) {
       return Column(
         children: [
           for (var file in _selectedFiles) Text(file.path),
@@ -49,6 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 showModalBottomSheet(
                     context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
                     builder: (context) {
                       return FilePickerBottomSheet(onPickFiles: (files) {
                         setState(() {
@@ -131,7 +132,7 @@ class FilePickerBottomSheet extends StatelessWidget {
         files.add(File(path));
       }
     }
-    if (files.isNotEmpty) {      
+    if (files.isNotEmpty) {
       onPickFiles(files);
     }
   }
@@ -140,39 +141,59 @@ class FilePickerBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: DoctisInsets.all.m,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DoctisRow(
-              divider: true,
-              isDark: true,
-              child: DoctisRowChildBadge2(
-                onPressed: () => pickGalleryFiles(context),
-                title: 'Выбрать фото из галереи',
-                rightIcon: DoctisIcon(
-                  DoctisIcons.chevron_right,
-                  doctisIconColor: DoctisIconColors.monochrome20,
-                ),
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: DoctisInsets.bottom.s,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Прикрепить', style: DoctisTypography.text.title_20_bold),
+                IconButton(
+                  icon: DoctisIcon(DoctisIcons.cross,
+                      doctisIconColor: DoctisIconColors.monochrome20),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             ),
-            GestureDetector(
-              onTap: () => pickFiles(context),
-              child: DoctisRow(
-                isDark: true,
-                child: DoctisRowChildBadge2(
-                  onPressed: () => pickFiles(context),
-                  title: 'Выбрать файл',
-                  rightIcon: DoctisIcon(
-                    DoctisIcons.chevron_right,
-                    doctisIconColor: DoctisIconColors.monochrome20,
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Column(
+              children: [
+                DoctisRow(
+                  divider: true,
+                  isDark: true,
+                  child: DoctisRowChildBadge2(
+                    onPressed: () => pickGalleryFiles(context),
+                    title: 'Выбрать фото из галереи',
+                    rightIcon: DoctisIcon(
+                      DoctisIcons.chevron_right,
+                      doctisIconColor: DoctisIconColors.monochrome20,
+                    ),
                   ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () => pickFiles(context),
+                  child: DoctisRow(
+                    isDark: true,
+                    child: DoctisRowChildBadge2(
+                      onPressed: () => pickFiles(context),
+                      title: 'Выбрать файл',
+                      rightIcon: DoctisIcon(
+                        DoctisIcons.chevron_right,
+                        doctisIconColor: DoctisIconColors.monochrome20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
