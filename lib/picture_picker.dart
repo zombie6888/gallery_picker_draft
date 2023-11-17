@@ -4,18 +4,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'gallery_view.dart';
+import 'picture_preview_grid.dart';
 
-class GalleryPicker extends StatefulWidget {
+class PicturePicker extends StatefulWidget {
   final void Function(List<String> assets) onSubmit;
-  const GalleryPicker({super.key, required this.onSubmit});
+  const PicturePicker({super.key, required this.onSubmit});
 
   @override
-  State<GalleryPicker> createState() => _GalleryPickerState();
+  State<PicturePicker> createState() => _PicturePickerState();
 }
 
-class _GalleryPickerState extends State<GalleryPicker> {
-  List<ImageAsset> _assets = [];
+class _PicturePickerState extends State<PicturePicker> {
+  List<Picture> _assets = [];
   int _page = 1;
   int _totalCount = 0;
   final _size = 30;
@@ -31,7 +31,7 @@ class _GalleryPickerState extends State<GalleryPicker> {
       setState(() {
         _page = page;
       });
-      List<ImageAsset> newAssets = [];
+      List<Picture> newAssets = [];
       final List<AssetPathEntity> paths = await PhotoManager.getAssetPathList(
           type: RequestType.image, onlyAll: true);
       if (_totalCount == 0) {
@@ -48,8 +48,8 @@ class _GalleryPickerState extends State<GalleryPicker> {
             thumbnailFormat: ThumbnailFormat.jpeg, // Defaults to `jpeg`.
           );
           final file = await entity.loadFile();
-          final path = file?.path ?? '';        
-          newAssets.add(ImageAsset(path: path, preview: image));
+          final path = file?.path ?? '';
+          newAssets.add(Picture(path: path, preview: image));
         }
       }
       setState(() {
@@ -78,7 +78,7 @@ class _GalleryPickerState extends State<GalleryPicker> {
   @override
   Widget build(BuildContext context) {
     final canLoadMore = _page * _size < _totalCount;
-    return GalleryView(
+    return PicturePreviewGrid(
         onSubmit: widget.onSubmit,
         onLoadMoreImages: loadMoreImages,
         canLoadMore: canLoadMore,
