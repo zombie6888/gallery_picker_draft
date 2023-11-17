@@ -46,28 +46,28 @@ class FilePickerBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: DoctisInsets.all.m,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: DoctisInsets.bottom.s,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Прикрепить', style: DoctisTypography.text.title_20_bold),
-                IconButton(
-                  icon: DoctisIcon(DoctisIcons.cross,
-                      doctisIconColor: DoctisIconColors.monochrome20),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8, left: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Прикрепить', style: DoctisTypography.text.title_20_bold),
+              IconButton(
+                icon: DoctisIcon(DoctisIcons.cross,
+                    doctisIconColor: DoctisIconColors.monochrome20),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
           ),
-          ClipRRect(
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: Column(
               children: [
@@ -83,25 +83,22 @@ class FilePickerBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => pickFiles(context),
-                  child: DoctisRow(
-                    isDark: true,
-                    child: DoctisRowChildBadge2(
-                      onPressed: () => pickFiles(context),
-                      title: 'Выбрать файл',
-                      rightIcon: DoctisIcon(
-                        DoctisIcons.chevron_right,
-                        doctisIconColor: DoctisIconColors.monochrome20,
-                      ),
+                DoctisRow(
+                  isDark: true,
+                  child: DoctisRowChildBadge2(
+                    onPressed: () => pickFiles(context),
+                    title: 'Выбрать файл',
+                    rightIcon: DoctisIcon(
+                      DoctisIcons.chevron_right,
+                      doctisIconColor: DoctisIconColors.monochrome20,
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

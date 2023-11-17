@@ -11,15 +11,17 @@ class Picture {
 }
 
 class PicturePreviewGrid extends StatefulWidget {
-  final List<Picture> assets;
+  final List<Picture> pictures;
   final int itemsCount;
   final VoidCallback onLoadMoreImages;
   final bool canLoadMore;
+  final Size previewSize;
   final void Function(List<String> assets) onSubmit;
   const PicturePreviewGrid(
       {super.key,
-      required this.assets,
+      required this.pictures,
       required this.onLoadMoreImages,
+      required this.previewSize,
       required this.onSubmit,
       this.canLoadMore = true,
       required this.itemsCount});
@@ -54,14 +56,12 @@ class _PicturePreviewGridState extends State<PicturePreviewGrid> {
 
   @override
   Widget build(BuildContext context) {
-    // final itemCount =
-    //     widget.canLoadMore ? widget.page * widget.size : widget.assets.length;
     return Stack(
       children: [
         GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 1,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
               crossAxisCount: 3,
             ),
             itemCount: widget.itemsCount,
@@ -70,11 +70,12 @@ class _PicturePreviewGridState extends State<PicturePreviewGrid> {
               if (lastItemVisible && widget.canLoadMore) {
                 widget.onLoadMoreImages();
               }
-              final isLoaded = widget.assets.length > i;
-              final asset = isLoaded ? widget.assets[i] : null;
+              final isLoaded = widget.pictures.length > i;
+              final asset = isLoaded ? widget.pictures[i] : null;
               final id = asset?.path ?? '';
               return PicturePreviewTile(
                   id: id,
+                  tileSize: widget.previewSize,
                   previewImage: asset?.preview,
                   onToggleSelector: onToggleSelector,
                   onPressTile: showViewer,

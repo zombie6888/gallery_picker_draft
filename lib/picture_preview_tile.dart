@@ -8,6 +8,7 @@ class PicturePreviewTile extends StatelessWidget {
   final bool isActive;
   final Image? previewImage;
   final bool isLoaded;
+  final Size tileSize;
   final void Function(String id) onToggleSelector;
   final void Function(String id) onPressTile;
 
@@ -15,6 +16,7 @@ class PicturePreviewTile extends StatelessWidget {
       {super.key,
       required this.id,
       required this.previewImage,
+      required this.tileSize,
       required this.onToggleSelector,
       required this.onPressTile,
       required this.isLoaded,
@@ -28,8 +30,8 @@ class PicturePreviewTile extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         Container(
-            width: 100,
-            height: 100,
+            width: tileSize.width,
+            height: tileSize.height,
             color: DoctisBackgroundColors.monochrome5,
             child: isLoaded && image != null
                 ? AnimatedPadding(
@@ -49,7 +51,8 @@ class PicturePreviewTile extends StatelessWidget {
                   )
                 : Center(
                     child: DoctisIcon(
-                      DoctisIcons.image_placeholder,
+                      //DoctisIcons.image_placeholder,
+                      DoctisIcons.asterisk,
                       doctisIconSize: DoctisIconSize.l,
                       doctisIconColor: DoctisIconColors.monochrome27,
                     ),
